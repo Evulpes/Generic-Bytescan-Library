@@ -8,7 +8,7 @@ namespace Generic_Bytescan_Library
 {
     public class ByteScan : NativeMethods
     {
-        public static int FindByteSequence(Process process, byte[] pattern, out IntPtr[] offsets, bool findAll = false)
+        public static int FindInBaseModule(Process process, byte[] pattern, out IntPtr[] offsets, bool findAll = false)
         {
             List<IntPtr> offsetList = new List<IntPtr>();
             offsets = new IntPtr[] { (IntPtr)0 };

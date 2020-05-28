@@ -45,6 +45,9 @@ namespace Generic_Bytescan_Library
 
                 if (lpBuffer[i] == pattern[0])
                 {
+                    if ((lpBuffer.Length - lpBuffer[i]) < pattern.Length)
+                        continue;
+
                     for (int x = 0; x < pattern.Length; x++)
                         tempArray[x] = lpBuffer[i + x];
 

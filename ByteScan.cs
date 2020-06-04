@@ -8,7 +8,7 @@ namespace Generic_Bytescan_Library
 {
     public class ByteScan : NativeMethods
     {
-        public static int FindInBaseModule(Process process, byte[] pattern, out IntPtr[] offsets, bool findAll = false)
+        public static int FindInBaseModule(Process process, byte[] pattern, out IntPtr[] offsets, bool wildcard=false, byte wildcardChar = 0xff, bool findAll = false)
         {
             List<IntPtr> offsetList = new List<IntPtr>();
             offsets = new IntPtr[] { (IntPtr)0 };
@@ -51,14 +51,36 @@ namespace Generic_Bytescan_Library
                     for (int x = 0; x < pattern.Length; x++)
                         tempArray[x] = lpBuffer[i + x];
 
-                    if(Enumerable.SequenceEqual(tempArray, pattern))
-                    {
-                        //Add the index of the byte[] to  the offset list
-                        offsetList.Add((IntPtr)i);
 
-                        if (!findAll)
-                            break;
+                    if (wildcard)
+                    {
+                        bool match = true;
+                        for (int x = 0; x < pattern.Length; x++)
+                        {
+                            if (pattern[x] == tempArray[x] || pattern[x] == wildcardChar)
+                                continue;
+                            else
+                            {
+                                match = false;
+                                break;
+                            }
+                        }
+                        if (match)
+                            offsetList.Add((IntPtr)i);
                     }
+
+                    else
+                    {
+                        if (Enumerable.SequenceEqual(tempArray, pattern))
+                        {
+                            //Add the index of the byte[] to  the offset list
+                            offsetList.Add((IntPtr)i);
+
+                            if (!findAll)
+                                break;
+                        }
+                    }
+
 
                 }
             }
